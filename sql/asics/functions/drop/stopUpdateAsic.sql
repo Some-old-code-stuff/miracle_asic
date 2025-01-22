@@ -1,0 +1,1 @@
+DROP FUNCTION stop_update_asic(INTEGER);

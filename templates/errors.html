@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load error_views %}
+{% load bootstrap3 %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% load sorting_tags %}
+            {% bootstrap_pagination page_obj extra=request.GET.urlencode pages_to_show=5 %}
+            <table class="table table-bordered table-striped" id="asic_table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="check_all"/></th>
+                    {% sort_th "Создана" "created" %}
+                    {% sort_th "Статус ошибки" "status" %}
+                    {% sort_th "Сообщение ошибки" "message" %}
+                    {% sort_th "Имя ASIC" "asic_name" %}
+                    {% sort_th "IP адрес" "ip_address" %}
+                    {% sort_th "Тип ASIC" "type" %}
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% with errors=errors.all %}
+                    {% for error in errors %}
+                        {% error_table_view error %}
+                    {% endfor %}
+                {% endwith %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

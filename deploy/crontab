@@ -1,0 +1,7 @@
+# Every minute start nmap tasks
+FILE_PATH=/home/mrakolice/Projects/miracle_asic/nmap/
+
+
+* * * * * nmap -F -T5 -oX $FILE_PATH/ports1.xml 192.168.1.0-255
+* * * * * nmap -F -T5 -oX $FILE_PATH/ports8.xml 192.168.8.0-255
+* * * * * nmap -F -T5 -oX $FILE_PATH/ports9.xml 192.168.9.0-255

@@ -1,0 +1,15 @@
+<uwsgi>
+    <socket>/home/miracle_asic/miracle_asic.sock</socket>
+    <chmod-socket>666</chmod-socket>
+    <plugins>python3</plugins>
+    <pythonpath>/home/miracle_asic/miracle_asic</pythonpath>
+    <virtualenv>/home/miracle_asic/.virtualenvs/miracle_asic</virtualenv>
+    <chdir>/home/miracle_asic/miracle_asic/main</chdir>
+    <module>wsgi:application</module>
+    <env>DJANGO_SETTINGS_MODULE=main.settings</env>
+    <master/>
+    <workers>10</workers>
+    <processes>8</processes>
+    <uid>www-data</uid>
+    <buffer-size>32768</buffer-size>
+</uwsgi>

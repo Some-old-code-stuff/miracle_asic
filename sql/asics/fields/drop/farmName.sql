@@ -1,0 +1,1 @@
+DROP FUNCTION common_asic_farm_name(common_asic);

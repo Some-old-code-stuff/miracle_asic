@@ -1,0 +1,1 @@
+DROP FUNCTION common_asic_client_name(common_asic);

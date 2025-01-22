@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load bootstrap3 %}
+    {% load menu %}
+{% load render_bundle from webpack_loader %}
+{#    {% bootstrap_css %}#}
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="application/javascript" src="{% bootstrap_jquery_url %}"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+{#    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">#}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-datepicker3.standalone.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+{#    {% bootstrap_javascript %}#}
+{#    <script type="application/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>#}
+{#    <script type="application/javascript" src="{% static 'js/locales/bootstrap-datepicker.ru.min.js' %}"></script>#}
+</head>
+<body class="container-fluid">
+{% block header %}
+    {% generate_menu %}
+
+    <div class="page-header">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#navbar_collapse" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbar_collapse">
+
+                    <ul class="nav navbar-nav">
+                        {% with menu=menus.web %}{% include "shared/navigation.html" %}{% endwith %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% load django_bootstrap_breadcrumbs %}
+
+        {% block breadcrumbs %}
+            {% clear_breadcrumbs %}
+            {% breadcrumb "Поиск" request.session.search_uri %}
+        {% endblock %}
+
+        {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
+    </div>
+
+
+{% endblock %}
+
+{% include 'shared/messages.html' %}
+{% block content %} {% endblock %}
+<script type="application/javascript" src="{% static 'js/group_operations.js' %}"></script>
+
+    {% render_bundle 'app' %}
+</body>
+</html>

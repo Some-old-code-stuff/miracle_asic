@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load asic_views %}
+    {% for asic in asics %}
+        {% if forloop.counter0|divisibleby:3 or forloop.first %}
+            <div class="row">
+        {% endif %}
+        {% asic_dashboard_view asic %}
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

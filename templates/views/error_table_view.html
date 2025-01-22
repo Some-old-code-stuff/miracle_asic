@@ -1,0 +1,21 @@
+<tr>
+    <td></td>
+    <td>{{ error.created|date:'d.m.Y H:i:s' }}</td>
+    <td>{{ error.get_status_display }}</td>
+    <td>{{ error.message }}</td>
+    <td>{{ error.asic.asic_name }}</td>
+    <td><a href="http://{{ error.asic.ip_address }}" target="_blank">{{ error.asic.ip_address }}</a></td>
+    <td>{{ error.asic.get_type_display }}</td>
+    <td>
+        <a href="{% url 'to_pending' error.pk %}" class="btn btn-default btn-issa">В разработку</a>
+        {% if error.status == 2 %}
+            <a href="{% url 'close_error' error.pk %}" class="btn btn-default btn-issa">Решена</a>
+        {% endif %}
+        {% if error.level == 1 %}
+            <a href="{% url 'to_error' error.pk %}" class="btn btn-default btn-issa">Повысить уровень</a>
+        {% endif %}
+        {% if error.level == 2 %}
+            <a href="{% url 'to_warning' error.pk %}" class="btn btn-default btn-issa">Понизить уровень</a>
+        {% endif %}
+    </td>
+</tr>

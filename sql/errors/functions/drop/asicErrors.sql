@@ -1,0 +1,1 @@
+DROP FUNCTION asic_errors(INT, TEXT, INT);

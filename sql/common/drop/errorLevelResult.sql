@@ -1,0 +1,1 @@
+DROP TYPE error_level_result;

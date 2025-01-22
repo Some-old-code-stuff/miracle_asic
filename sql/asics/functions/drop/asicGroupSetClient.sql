@@ -1,0 +1,1 @@
+DROP FUNCTION asic_group_set_client(INTEGER[], INTEGER);

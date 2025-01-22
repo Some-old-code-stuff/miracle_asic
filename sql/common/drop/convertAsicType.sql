@@ -1,0 +1,1 @@
+DROP FUNCTION convert_asic_type(INTEGER);

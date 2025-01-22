@@ -1,0 +1,1 @@
+DROP FUNCTION public.dashboard_asics();

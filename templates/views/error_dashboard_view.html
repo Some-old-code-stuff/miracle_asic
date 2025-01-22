@@ -1,0 +1,26 @@
+<tr>
+    <td>{{ error.created|date:"d.m.Y H:i:s" }}</td>
+    <td>{{ error.get_status_display }}</td>
+    <td>{{ error.get_level_display }}</td>
+    <td>{{ error.message }}</td>
+    <td>
+        {% if error.level == 2 %}
+{#            <a href="" class="btn btn-default" data-toggle="modal"#}
+{#               data-target="#history_modal_{{ error.id }}">История</a>#}
+        {% endif %}
+
+        <a href="{% url 'to_pending' error.pk %}" class="btn btn-default">В
+            разработку</a>
+        {% if error.status == 2 %}
+            <a href="{% url 'close_error' error.pk %}" class="btn btn-default">Решена</a>
+        {% endif %}
+        {% if error.level == 1 %}
+            <a href="{% url 'to_error' error.pk %}" class="btn btn-default">Повысить
+                уровень</a>
+        {% endif %}
+        {% if error.level == 2 %}
+            <a href="{% url 'to_warning' error.pk %}" class="btn btn-default">Понизить
+                уровень</a>
+        {% endif %}
+    </td>
+</tr>

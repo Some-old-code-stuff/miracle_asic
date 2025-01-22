@@ -1,0 +1,1 @@
+DROP FUNCTION asic_group_set_auto_update(INTEGER [], BOOLEAN);

@@ -1,0 +1,1 @@
+DROP FUNCTION add_asic(int, text, int, int, int);

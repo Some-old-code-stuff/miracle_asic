@@ -1,0 +1,59 @@
+{#{% if list.has_other_pages or true %}#}
+<div class="row">
+    <div class="col-md-2">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li><span onclick="change_page({{ page_obj.previous_page_number }})">&laquo;</span></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+                    </li>
+                {% else %}
+                    <li><span onclick="change_page({{ i }})">{{ i }}</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><span onclick="change_page({{ page_obj.next_page_number }})">&raquo;</span></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </div>
+{#    <div class="col-md-2">#}
+{#        <div class="form-group">#}
+{##}
+            <script type="application/javascript">
+                function updateQueryStringParameter(uri, key, value) {
+                    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+                    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+                    if (uri.match(re)) {
+                        return uri.replace(re, '$1' + key + "=" + value + '$2');
+                    }
+                    else {
+                        return uri + separator + key + "=" + value;
+                    }
+                }
+
+                function change_per_page_count(value) {
+                    window.location = updateQueryStringParameter(window.location.href, 'per_page', value)
+                }
+
+                function change_page(value) {
+                    window.location = updateQueryStringParameter(window.location.href, 'page', value)
+                }
+            </script>
+{#            <label class="control-label">Отображать по</label>#}
+{#            <select name="per_page" id="per_page" class="form-control" onchange="change_per_page_count(this.value)">#}
+{#                {% for per_page in per_page_list %}#}
+{#                    <option value="{{ per_page.0 }}" {% if current_per_page == per_page.0 %}#}
+{#                            selected="selected" {% endif %}#}
+{#                    >{{ per_page.1 }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+</div>
+{#{% endif %}#}

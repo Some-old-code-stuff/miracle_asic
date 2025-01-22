@@ -1,0 +1,1 @@
+drop function error_rules(integer);

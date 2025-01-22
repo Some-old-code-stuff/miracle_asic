@@ -1,0 +1,1 @@
+DROP FUNCTION asic_group_set_farm(INTEGER[], INTEGER);

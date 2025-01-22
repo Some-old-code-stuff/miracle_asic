@@ -1,0 +1,1 @@
+DROP FUNCTION common_asic_errors(common_asic);

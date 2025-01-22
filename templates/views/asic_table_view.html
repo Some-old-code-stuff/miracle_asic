@@ -1,0 +1,51 @@
+{% load comparison_filters %}
+{% load bootstrap3 %}
+{% load errors %}
+
+<tr class="{% have_errors asic %}-background">
+    <td><input type="checkbox" name="{{ asic.id }}" class="asic_id"/></td>
+    <td>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asic_modal_{{ asic.id }}">
+            {{ asic.asic_name }}
+            {% bootstrap_icon 'signal' extra_classes=asic|have_connect_error title=asic|have_connect_error_title %}
+
+            {% if asic.stop_update %}
+                {% bootstrap_icon 'exclamation-sign' extra_classes='yellow-icon' title='Автообновление выключено!' %}
+            {% endif %}
+        </button>
+    </td>
+    <td>{{ asic.get_alg_type_display }}</td>
+    <td><a href="http://{{ asic.ip_address }}" target="_blank">{{ asic.ip_address }}</a></td>
+    <td><span
+            class="label label-{% have_errors asic 'pool_status' %}">{{ asic.pool_status }}</span>
+    </td>
+    <td>{{ asic.get_type_display }}</td>
+    <td><span class="label label-info">{{ asic.client|default:'Не указан' }}</span></td>
+    <td><span
+            class="label label-{% have_errors_with_warnings asic 'full_rate' %}">{{ asic.full_rate|floatformat:2 }} {{ asic.asic_info.measure_display }}</span>
+    </td>
+    <td>{{ asic.default_rate }} {{ asic.get_measure_display }}</td>
+    <td>
+        {% for chain_info in asic.asic_info.chain_info_set.all %}
+            <span class="label label-{% have_errors asic 'chain_info_set__wrong_chips' chain_info.id %}">{{ chain_info.wrong_chips }}/{{ chain_info.working_chips }}</span>
+        {% endfor %}
+    </td>
+    <td>{{ asic.pool_username|default:'Не указан' }}</td>
+    <td>{{ asic.pool_address|default:'Не указан' }}</td>
+    <td>{{ asic.farm|default:'Не указан' }}</td>
+    <td>{{ asic.updated|default:'Не указан'|date:'d.m.Y H:i:s' }}</td>
+    <td>
+        <a href="{% url 'close_all_errors' pk=asic.id %}" class="btn btn-default btn-issa"
+           title="Проблемы решены">{% bootstrap_icon 'check' %}</a>
+        <a href="{% url 'update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+           title="Обновить">{% bootstrap_icon 'repeat' %}</a>
+        <a href="#" class="btn btn-default btn-issa" title="Перезагрузка">{% bootstrap_icon 'refresh' %}</a>
+        {% if asic.stop_update %}
+            <a href="{% url 'resume_update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+               title="Возобновить обновление">{% bootstrap_icon 'play' %}</a>
+        {% else %}
+            <a href="{% url 'stop_update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+               title="Остановить обновление">{% bootstrap_icon 'pause' %}</a>
+        {% endif %}
+    </td>
+</tr>

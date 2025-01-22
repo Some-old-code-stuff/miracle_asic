@@ -1,0 +1,1 @@
+DROP FUNCTION set_asic_type(INTEGER, INTEGER);

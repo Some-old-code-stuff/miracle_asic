@@ -1,0 +1,1 @@
+DROP FUNCTION common_error_warning_rule_id(common_error);

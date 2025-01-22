@@ -1,0 +1,1 @@
+DROP FUNCTION close_asic_errors(INTEGER);

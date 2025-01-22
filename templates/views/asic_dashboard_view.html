@@ -1,0 +1,130 @@
+{% load comparison_filters %}
+{% load bootstrap3 %}
+{% load errors %}
+<div class="col-md-4 well">
+    <div class="col-md-5">
+        <h4>{{ asic.asic_name }}{% bootstrap_icon 'signal' extra_classes=asic|have_connect_error %}</h4>
+        <h5>{{ asic.asic_info.created|date:'d.m.Y H:i:s' }}</h5>
+        <h4><span class="grey-color">{{ asic.default_rate }} {{ asic.get_measure_display }}</span></h4>
+        <h4>{{ asic.host_name }}</h4>
+        <h4><a href="http://{{ asic.ip_address }}" target="_blank">{{ asic.ip_address }}</a></h4>
+        <h4><span
+                class="label label-{% have_errors_with_warnings asic 'full_rate' %}">{{ asic.full_rate }} {{ asic.asic_info.measure_display }}</span>
+        </h4>
+        <h4>Статус пула <span
+                class="label label-{% have_errors asic 'pool_status' %}">{{ asic.pool_status }}</span>
+        </h4>
+        <h4 data-toggle="tooltip" data-placement="top" title="{{ asic.pool_address }}">Адрес
+            пула: {{ asic.pool_address|truncatechars:8 }}</h4>
+        <h4 data-toggle="tooltip" data-placement="top" title="{{ asic.pool_username }}">Пользователь на
+            пуле: {{ asic.pool_username|truncatechars:8 }}</h4>
+
+        <a href="{% url 'close_all_errors' pk=asic.id %}" class="btn btn-default btn-issa"
+           title="Проблемы решены">{% bootstrap_icon 'check' %}</a>
+        <a href="{% url 'update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+           title="Обновить">{% bootstrap_icon 'repeat' %}</a>
+        <a href="#" class="btn btn-default btn-issa"
+           title="Перезагрузка">{% bootstrap_icon 'refresh' %}</a>
+        {% if asic.stop_update %}
+            <a href="{% url 'resume_update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+               title="Возобновить обновление">{% bootstrap_icon 'play' %}</a>
+        {% else %}
+            <a href="{% url 'stop_update_asic' pk=asic.id %}" class="btn btn-default btn-issa"
+               title="Остановить обновление">{% bootstrap_icon 'pause' %}</a>
+        {% endif %}
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#open_errors_modal_{{ asic.id }}">
+            Открытые ошибки
+        </button>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#open_warnings_modal_{{ asic.id }}">
+            Открытые уведомления
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#all_errors_modal_{{ asic.id }}">
+            Все ошибки и уведомления
+        </button>
+    </div>
+    <div class="col-md-7">
+        {#                1 block #}
+        <div class="well well-without-padding">
+            <div class="row">
+                <span class="label grey-color no-background">&#8451;</span>
+                <span class="label grey-color no-background">Частота</span>
+                <span class="label grey-color no-background">Мощн.</span>
+                <span class="label grey-color no-background">Чипы</span>
+            </div>
+        </div>
+        {% for chain_info in asic.asic_info.chain_info_set.all %}
+
+            <div class="well well-without-padding">
+                <div class="row">
+                    <span class="label label-{% have_errors asic 'chain_info_set__temperature' chain_info.id %}">{{ chain_info.temperature }}</span>
+                    <span class="label label-info">{{ chain_info.frequency|floatformat:2 }}</span>
+                    <span class="label label-info">{{ chain_info.rate|floatformat:2 }} {{ chain_info.get_measure_display }}</span>
+                    <span class="label label-{% have_errors asic 'chain_info_set__wrong_chips' chain_info.id %}">{{ chain_info.wrong_chips }}/{{ chain_info.working_chips }}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row progress">
+                    <div class="progress-bar progress-bar-success"
+                         style="width:{{ chain_info.success_percent }}%;"></div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ chain_info.error_percent }}%;"></div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="well well-without-padding">
+            <div class="row">
+                {% for fan_info in asic.asic_info.fan_info_set.all %}
+                    <span class="label grey-color no-background">{{ fan_info.name }}: {{ fan_info.speed }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="error_modal_{{ asic.id }}" tabindex="-1" role="dialog"
+         aria-labelledby="error_modal_label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="error_modal_label">Ошибки</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                    <div class="row col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Появилась</th>
+                                <th>Статус ошибки</th>
+                                <th>Сообщение ошибки</th>
+                                <th>Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% load error_views %}
+                            {% for error in asic.open_errors %}
+                                {% error_dashboard_view error %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="model-footer">
+                    {#                <a href="" class="btn btn-primary">Обновить</a>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% load error_views %}
+{#{% for error in asic.open_errors %}#}
+{#    {% error_history_view 'history' error.id error.get_history_errors tabindex=-3 %}#}
+{#{% endfor %}#}
+{% error_history_view 'open_errors' asic.id asic.open_errors %}
+{% error_history_view 'open_warnings' asic.id asic.open_warnings %}
+{% error_history_view 'all_errors' asic.id asic.errors.all %}
+</div>
