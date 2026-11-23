@@ -4,7 +4,7 @@ import graphene
 from backend.common import models
 
 
-class OkField(graphene.AbstractType):
+class OkField(graphene.ObjectType):
     ok = graphene.Boolean()
 
 

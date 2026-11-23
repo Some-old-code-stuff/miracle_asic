@@ -6,8 +6,10 @@
         <b-navbar-brand to="/home">DASHBOARD</b-navbar-brand>
         <b-collapse is-nav id="nav_collapse" class="py-2" v-if="loggedIn">
           <b-navbar-nav>
-            <b-nav-item to="/home">Все устройства <span v-if="menuInfo.asicCount">({{menuInfo.asicCount}})</span></b-nav-item>
-            <b-nav-item to="/dashboard">Устройства с ошибками <span v-if="menuInfo.errorAsicCount">({{menuInfo.errorAsicCount}})</span>
+            <b-nav-item to="/home">Все устройства <span v-if="menuInfo.asicCount">({{ menuInfo.asicCount }})</span>
+            </b-nav-item>
+            <b-nav-item to="/dashboard">Устройства с ошибками <span
+              v-if="menuInfo.errorAsicCount">({{ menuInfo.errorAsicCount }})</span>
             </b-nav-item>
             <b-nav-item to="/balance">Баланс</b-nav-item>
             <b-nav-item to="/error_rules">Правила</b-nav-item>
@@ -24,7 +26,7 @@
     <div class="col-md-4 clearfix">
 
       <b-alert v-for="alert in alerts" :variant="alert.variant" dismissible @dismissed="dismissAlert(alert)" :show="30">
-        {{alert.message}}
+        {{ alert.message }}
       </b-alert>
     </div>
 
@@ -34,25 +36,25 @@
 </template>
 
 <script>
-  import {mapState, mapGetters, mapActions} from 'vuex';
+import {mapState, mapGetters, mapActions} from 'vuex';
 
-  export default{
-    name: 'Layout',
-    computed: {
-      ...mapState('utils', [
-        'menuInfo',
-      ]),
-      ...mapState('alerts', [
-        'alerts',
-      ]),
-      ...mapGetters('auth', [
-          'loggedIn'
-      ]),
-    },
-    methods: {
-      dismissAlert(alert){
-        this.$store.dispatch('alerts/deleteAlert', alert)
-      }
+export default {
+  name: 'Layout',
+  computed: {
+    ...mapState('utils', [
+      'menuInfo',
+    ]),
+    ...mapState('alerts', [
+      'alerts',
+    ]),
+    ...mapGetters('auth', [
+      'loggedIn'
+    ]),
+  },
+  methods: {
+    dismissAlert (alert) {
+      this.$store.dispatch('alerts/deleteAlert', alert)
     }
   }
+}
 </script>

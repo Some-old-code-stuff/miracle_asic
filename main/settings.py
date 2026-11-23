@@ -28,7 +28,7 @@ SECRET_KEY = 'kz6%ypq=^h!^n4j$0y9_j@q!sh%(&^!gfhwl@rc&&@$&kr-4a('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.15.13', 'localhost']
+ALLOWED_HOSTS = ['192.168.15.13', 'localhost', '127.0.0.1', '0.0.0.0']
 
 # Application definition
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker',
     'menu',
     'django_bootstrap_breadcrumbs',
-    'sorting_bootstrap',
+    'django_sorting_bootstrap',
 
     # inner apps
     'backend.common',
@@ -72,7 +72,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'graphql_jwt.middleware.JSONWebTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -89,8 +88,14 @@ GRAPHQL_JWT = {
 }
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8080',
+    'http://localhost:8085',
+    'http://127.0.0.1:8085'
 )
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8085',
+    'http://127.0.0.1:8085',
+]
+
 ROOT_URLCONF = 'main.urls'
 
 TEMPLATES = [
@@ -122,7 +127,7 @@ DATABASES = {
         'USER': 'miracle_asic',
         'PASSWORD': 'miracle_asic',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
 }
 
@@ -182,11 +187,17 @@ REQUESTS_TIMEOUT=5
 
 GRAPHENE = {
     'SCHEMA': 'main.schema.main_schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ]
 }
 SILKY_PYTHON_PROFILER = True
 SILKY_PYTHON_PROFILER_BINARY = True
 SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, "nmap")
 SILKY_META = True
+ADMIN_USERNAME = 'admin'
+ADMIN_PASSWORD = 'admin'
+
 try:
     from .local_settings import *
 except:

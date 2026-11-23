@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from datetime import timedelta, datetime
 from django.conf import settings
 from django.contrib.auth import models as auth_models
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.db import models
 from django.db.models import F
 from django.db.models import OuterRef, Count

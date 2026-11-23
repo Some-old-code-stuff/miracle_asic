@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url, include
+from django.urls import path, re_path, include
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -23,19 +23,19 @@ from graphene_django.views import GraphQLView
 from backend.web.views import GraphqlApiView
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'', include('django.contrib.auth.urls')),
-    url(r'', include('backend.web.urls')),
-    url(r'^spa$', TemplateView.as_view(template_name='spa.html'), name='home'),
-    url(r'^api', csrf_exempt(GraphQLView.as_view(graphiql=True))),
-    url(r'^profile$', csrf_exempt(GraphqlApiView.as_view())),
+    re_path(r'^admin/', admin.site.urls),
+    path(r'', include('django.contrib.auth.urls')),
+    path(r'', include('backend.web.urls')),
+    re_path(r'^spa$', TemplateView.as_view(template_name='spa.html'), name='home'),
+    re_path(r'^api', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    re_path(r'^profile$', csrf_exempt(GraphqlApiView.as_view())),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [
-                      url(r'^__debug__/', include(debug_toolbar.urls)),
+                      re_path(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
 
-urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
+urlpatterns += [re_path(r'^silk/', include('silk.urls', namespace='silk'))]

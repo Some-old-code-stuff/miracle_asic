@@ -5,7 +5,7 @@ import json
 
 from django.http import JsonResponse
 from graphene_django.views import GraphQLView
-from graphql import GraphQLCoreBackend
+from graphql import parse
 from silk.profiling.profiler import silk_profile
 
 from backend.common.tasks import update_asic_info
@@ -21,7 +21,6 @@ from django.views.generic import ListView
 from backend.common.models import Asic, Error, ErrorLevel, ErrorStatus
 from backend.web.forms import AsicSearchForm, ClientSearchForm, FarmSearchForm, AsicGroupEditForm, \
     ErrorRuleSearchForm
-
 
 class FilterListView(ListView):
     equal_fields = []
@@ -284,18 +283,32 @@ class GraphqlApiView(View):
     # @silk_profile()
     def post(self, request):
         from main.schema import main_schema
-        json_request = json.loads(request.body)
-        document = GraphQLCoreBackend().document_from_string(main_schema, json_request['query'])
-        variables = json_request.get('variables', None)
-        if variables is not None:
-            data = document.execute(variables=variables, context=request)
-        else:
-            data = document.execute(context=request)
+
         from django.http import HttpResponse
+        from django.core.serializers.json import DjangoJSONEncoder
+
+        json_request = json.loads(request.body)
+
+        variables = json_request.get('variables')
+        query = json_request['query']
+
+        data = main_schema.execute(
+            query,
+            variable_values=variables,
+            context_value=request,
+            operation_name=json_request.get('operationName'),
+        )
+
         errors = []
         if data.errors is not None:
             errors = [GraphQLView.format_error(e) for e in data.errors]
 
-        result = {'data': data.data, 'errors': errors}
-        from django.core.serializers.json import DjangoJSONEncoder
-        return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder))
+        result = {
+            'data': data.data,
+            'errors': errors,
+        }
+
+        return HttpResponse(
+            json.dumps(result, cls=DjangoJSONEncoder),
+            content_type='application/json',
+        )

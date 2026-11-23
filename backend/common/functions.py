@@ -31,6 +31,7 @@ def send_sms(message, raw_phone):
 
 def send_token(phone):
     token = str(random.randrange(1, 9999)).zfill(4)
+    print(token)
     profile = models.UserProfile.objects.get(phone=phone)
     profile.sms_token = hashlib.sha256(token.encode()).hexdigest()
     profile.sms_token_expiration = timezone.now() + timedelta(minutes=10)

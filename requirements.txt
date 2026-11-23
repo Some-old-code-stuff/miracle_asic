@@ -9,7 +9,7 @@ django-settings-export
 django-mailbox
 django-registration-defaults
 grab
-psycopg2==2.7.5 --no-binary psycopg2
+#psycopg2==2.7.5 --no-binary psycopg2
 requests
 lxml
 beautifulsoup4
